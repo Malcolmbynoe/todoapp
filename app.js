@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import { PORT, Mongodburl } from "./config.js"
 import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
 const app = express();
@@ -30,15 +30,23 @@ app.get('/task', (req, res) => {
     taskColl.find().toArray()
         .then(response => {
             console.log(response)
-            return res.status(201).send(response)
+            res.status(201).send(response)
         })
+        .catch(err => console.log(err))
 })
 
 app.get('/task/details/:id', (req, res) => {
-    taskColl.findOne({ _id: new ObjectId(req.params.id) })
+     
+    const date = req.params
+
+    const filter = { _id: new ObjectId(data.id)
+
+    }
+
+    taskColl.findOne (filter) 
         .then(response => {
-            console.log(response)
-            return res.status(201).send(response)
+            // console.log(response)
+             res.status(201).send(response)
         })
         .catch(error => console.log(error))
 })
@@ -66,6 +74,7 @@ app.post('/addtask', (req, res) => {
         return res.status(500).send("No details found.")
     if (!data.due_date)
         return res.status(500).send("No due_date found.")
+    data.completed = false
         taskColl.insertOne(data)
         .then(response => {
             return res.status(200).send(response)
@@ -74,6 +83,13 @@ app.post('/addtask', (req, res) => {
             console.log("An error occurred!")
             return res.sendStatus(500)
         })
+    if (data.task)
+        return res.status(500).send("Private")
+
+        .then(response =>{
+            return res.status(200).send(response)
+        })
+        .catch(err )
 })
 
 app.post('/task/update/details/:id', (req, res) => {
@@ -83,20 +99,32 @@ app.post('/task/update/details/:id', (req, res) => {
     //     let bookId = Math.random()
     //     return `{"bookId":"${bookId}"}`
     //    }
-    const data = req.body
+    const data = req.params
+    const docData = req.body
     // console.log(data)
-    if (!data.task && !data.details && !data.due_date)
-        return res.status(400).send("No data received.")
-
-    taskColl.updateOne({ _id: new ObjectId(req.params.id) }, { $set: {...data
-        //.task,...data.details,...date.due_date
-    }}, (error, response) => {
-        if (error) {
-            console.log("An error occurred!")
-            return res.sendStatus(500)
+    const filter = {
+        "_id":new ObjectId(data.id)
+    }
+    // if (data.task || data.details || data.due_date)
+    const updDoc = {
+        $set: {
+            ...docData
+            }
         }
+        // return res.status(400).send("No data received.")
+
+    taskColl.updateOne(filter,updDoc)
+       //.task,...data.details,...date.due_date
+.then(response=>{
+
+    // }}, (error, response) => {
+        // if (error) {
+            // console.log("An error occurred!")
+            res.Status(200).send(response)
+        // }
     })
-    return res.send(JSON.stringify(data))
+    .catch(err=>console.log(err))
+    // return res.send(JSON.stringify(data))
 })
 
 app.get('/task/:asc', (req, res) => {
