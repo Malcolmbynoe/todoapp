@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import { PORT, Mongodburl } from "./config.js"
 import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
+
 const app = express();
 
 app.use(express.json())
@@ -75,6 +76,11 @@ app.post('/addtask', (req, res) => {
     if (!data.due_date)
         return res.status(500).send("No due_date found.")
     data.completed = false
+    if (!data.private)
+        data.private = false
+    else
+        data.private = true
+        
         taskColl.insertOne(data)
         .then(response => {
             return res.status(200).send(response)
@@ -83,13 +89,6 @@ app.post('/addtask', (req, res) => {
             console.log("An error occurred!")
             return res.sendStatus(500)
         })
-    if (data.task)
-        return res.status(500).send("Private")
-
-        .then(response =>{
-            return res.status(200).send(response)
-        })
-        .catch(err )
 })
 
 app.post('/task/update/details/:id', (req, res) => {
@@ -141,3 +140,4 @@ app.get('/task/:asc', (req, res) => {
         })
         return res.send(JSON.stringify(data))
     })
+    
