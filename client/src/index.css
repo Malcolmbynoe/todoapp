@@ -1,8 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   background: url('/bgtask.png') no-repeat;
   background-size: cover;
   
-}
-.form-label{
-  font-size: large;
 }
