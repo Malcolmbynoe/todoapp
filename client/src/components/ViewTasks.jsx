@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TaskList from './TaskList';
+import { useNavigate } from 'react-router-dom';
 
 function ViewTasks() {
   const [tasks, setTasks] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchTasks();
@@ -14,40 +16,64 @@ function ViewTasks() {
     const req = new Request(
       'http://localhost:3000/tasks', {
       headers: {
-          "content-type": "application/json"
+        "content-type": "application/json"
       }
-  }
-  )
+    }
+    )
 
-  fetch(req)
+    fetch(req)
       .then(res => res.json())
       .then(data => {
-          console.log(data.length)
-          setTasks(data)
-          // setFilteredBooks(data)
+        console.log(data.length)
+        setTasks(data)
+        // setFilteredBooks(data)
       })
       .catch(err => console.error(err))
   };
+
+
+
+  const handleTaskComplete = (taskId,taskCompleted ) => {
+    console.log ({"completed":!taskCompleted})
+    const req = new Request(
+      `http://localhost:3000/update/` + taskId, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json"
+      },
+       body: JSON.stringify({"completed":!taskCompleted}),
+      }
+    )
+    
+    fetch(req)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      navigate(0)
+      
+    })
+    .catch(err => console.error(err))
+  }
   
   
-
-  const handleTaskComplete = async (taskId) => {
-    try {
-      await axios.put(`/update/${taskId}`);
-      fetchTasks();
-    } catch (error) {
-      console.error('Error completing task:', error);
+  const handleTaskDelete = (taskId) => {
+    const req = new Request(
+      `http://localhost:3000/remove/` + taskId, {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json"
+        }
     }
-  };
+    )
 
-  const handleTaskDelete = async (taskId) => {
-    try {
-      await axios.delete(`/remove/${taskId}`);
-      fetchTasks();
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
-  };
+    fetch(req)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+
+      })
+      .catch(err => console.error(err))
+  }
 
   return (
     <div className="container mx-auto p-4 bg-blue-300 bg-opacity-70">

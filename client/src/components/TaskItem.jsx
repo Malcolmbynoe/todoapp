@@ -1,9 +1,9 @@
 // src/components/TaskItem.jsx
 import React from 'react';
 
-function TaskItem({ task, onTaskComplete, onTaskDelete }) {
+function TaskItem({ task,  onTaskComplete, onTaskDelete }) {
   const handleComplete = () => {
-    onTaskComplete(task._id);
+    onTaskComplete(task._id,task.completed);
   };
 
   const handleDelete = () => {
@@ -19,7 +19,7 @@ function TaskItem({ task, onTaskComplete, onTaskDelete }) {
       <button 
         onClick={handleComplete} 
         className={`p-2 rounded ${task.completed ? 'bg-gray-400' : 'bg-green-500 text-white'}`}
-        disabled={task.completed}
+        // disabled={task.completed}
       >
         {task.completed ? 'Completed' : 'Mark as Complete'}
       </button>

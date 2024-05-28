@@ -1,26 +1,51 @@
 // src/pages/AddTask.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function AddTask() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [isPublic, setIsPublic] = useState(false);
+const AddTask = () => {
+  const navigate = useNavigate()
+  const [msg, setMsg] = useState("")
+  const [task, setTask] = useState("")
+  const [owner, setOwner] = useState("")
+  const [dueDate, setDueDate] = useState("")
+  const [isPublic, setIsPublic] = useState(false)
+  const [formData, setFormData] = useState({
+    task: "",
+    owner: "",
+    dueDate: "",
+    isPublic: ""
+  })
 
+
+  
   const handleSubmit = (e) => {
-    e.preventDefault();
-    axios.post('/api/tasks', {
-      title,
-      description,
-      dueDate,
-      isPublic,
-    }).then(response => {
-      console.log('Task added:', response.data);
-    }).catch(error => {
-      console.error('Error adding task:', error);
-    });
-  };
+    e.preventDefault()
+
+    setFormData({
+      ...formData,
+      ["task"]: task,
+      ["owner"]:owner,
+      ["dueDate"]:dueDate
+  })
+
+    const req = new Request(
+    'http://localhost:3000/tasks', {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    }
+    )
+      fetch(req)
+      .then(res => res.json())
+      .then(data => {
+          console.log(data)
+          setMsg(data)
+          navigate("/tasks")
+      })
+      .catch(err => console.error(err))
+}
 
   return (
     <div className="container mx-auto p-4">
@@ -28,15 +53,15 @@ function AddTask() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
+          value={owner}
+          onChange={(e) =>setOwner (e.target.value)}
+          placeholder="Task"
           className="w-full p-2 border border-gray-300 rounded mb-4"
         />
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
+        <input
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="Owner"
           className="w-full p-2 border border-gray-300 rounded mb-4"
         />
         <input
