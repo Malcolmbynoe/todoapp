@@ -6,8 +6,8 @@ const AddTask = () => {
   // const [msg, setMsg] = useState("")
   const [task, setTask] = useState("")
   const [owner, setOwner] = useState("")
-  // const [dueDate, setDueDate] = useState("")
-  // const [isPublic, setIsPublic] = useState(false)
+  const [dueDate, setDueDate] = useState("")
+  const [isPublic, setIsPublic] = useState(false)
   // const [formData, setFormData] = useState({
   //   task: "pop",
   //   owner: "",
@@ -60,20 +60,20 @@ const AddTask = () => {
           placeholder="Task"
           className="w-full p-2 border border-gray-300 rounded mb-4"
         />
-        {/* <input
+        <input
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded mb-4"
-        /> */}
-        {/* <label className="block mb-4">
+        />
+        <label className="block mb-4">
           <input
             type="checkbox"
-            // checked={isPublic}
+            checked={isPublic}
             onChange={() => setIsPublic(!isPublic)}
           />
           Public Task
-        </label> */}
+        </label>
 
         <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">
           Add Task
