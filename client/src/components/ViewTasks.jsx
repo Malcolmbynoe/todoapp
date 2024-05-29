@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TaskList from './TaskList';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ViewTasks() {
   const [tasks, setTasks] = useState([]);
@@ -80,6 +80,12 @@ function ViewTasks() {
       {sessionStorage.getItem("username")}
       <h1 className="text-2xl font-bold mb-4">View Tasks</h1>
       <TaskList tasks={tasks} onTaskComplete={handleTaskComplete} onTaskDelete={handleTaskDelete} />
+
+      <Link to="/AddTask">
+        <button type="button" className="w-full p-2 bg-blue-500 text-white rounded">
+          Add New Task
+        </button>
+      </Link>
     </div>
   );
 }
